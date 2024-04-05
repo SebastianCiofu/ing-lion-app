@@ -2,7 +2,8 @@ import { LitElement, css, html } from 'lit';
 import '@lion/form/define';
 import '../ing-components/input.js';
 import '../ing-components/button.js';
-import '../ing-components/switch.js'
+import '../ing-components/switch.js';
+import '../ing-components/checkbox-group.js';
 
 class IngUserDetails extends LitElement {
   static get styles() {
@@ -102,14 +103,24 @@ class IngUserDetails extends LitElement {
           <h3>Settings</h3>
           <div class="settings">
             <span class="setting-label">Dark Mode</span>
-            <ing-switch label="Label" help-text="Help text"></ing-switch>
+            <ing-switch></ing-switch>
           </div>
           <div class="settings">
             <span class="setting-label">Notifications</span>
-            <!-- <lion-checkbox-group name="notificationSettings">
-              <lion-checkbox slot="input" label="Email"></lion-checkbox>
-              <lion-checkbox slot="input" label="SMS"></lion-checkbox>
-            </lion-checkbox-group> -->
+            <ing-checkbox-group name="numbers[]" label="Numbers">
+              <lion-checkbox
+                label="1"
+                .choiceValue=${'1'}
+              ></lion-checkbox>
+              <lion-checkbox
+                label="2"
+                .choiceValue=${'2'}
+              ></lion-checkbox>
+              <lion-checkbox
+                label="3"
+                .choiceValue=${'3'}
+              ></lion-checkbox>
+            </ing-checkbox-group>
           </div>
         </div>
 
