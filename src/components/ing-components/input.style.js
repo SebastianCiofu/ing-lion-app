@@ -1,4 +1,3 @@
-
 import { css } from 'lit';
 
 export const inputStyles = css`
@@ -8,8 +7,7 @@ export const inputStyles = css`
     --lion-input-border-color: #b6b6b6;
     --lion-input-border-color-hover: #707070;
     --lion-input-border-color-focus: #1a2b42;
-    --lion-input-border-color-error: #ff1a1a;
-    --lion-input-font-size: 16px;
+    --lion-input-border-color-error: #dd5b5b;
     --lion-input-padding: 0.5em 1em;
   }
 
@@ -17,7 +15,6 @@ export const inputStyles = css`
     border-radius: var(--lion-input-border-radius);
     background-color: var(--lion-input-background-color);
     border: 1px solid var(--lion-input-border-color);
-    font-size: var(--lion-input-font-size);
     padding: var(--lion-input-padding);
   }
 
@@ -26,14 +23,16 @@ export const inputStyles = css`
   }
 
   ::slotted(label) {
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     display: block;
+    text-align: left;
   }
 
-  ::slotted([slot="feedback"]) {
-  color: var(--lion-input-border-color-error);
-  font-size: 24px
-}
+  ::slotted([slot='feedback']) {
+    color: var(--lion-input-border-color-error);
+    margin-top: 8px;
+    display: block;
+  }
 
   ::slotted(input:focus) {
     border-color: var(--lion-input-border-color-focus);

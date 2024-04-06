@@ -1,4 +1,4 @@
-import { inputStyles } from './inputStyles.js';
+import { inputStyles } from './input.style.js';
 import { LionInputIban } from '@lion/input-iban';
 
 class IngIban extends LionInputIban {

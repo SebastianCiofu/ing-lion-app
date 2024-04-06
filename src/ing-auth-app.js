@@ -13,7 +13,7 @@ router.setRoutes(routes);
 
 router.beforeEach((context, commands) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const isProtectedRoute = context.pathname.startsWith('/user-details')
+  const isProtectedRoute = context.pathname.startsWith('/user-details');
 
   if (isProtectedRoute && !isLoggedIn) {
     return commands.redirect('/');
@@ -23,9 +23,7 @@ router.beforeEach((context, commands) => {
 
 class IngAuthApp extends LitElement {
   render() {
-    return html`
-     <ing-login></ing-login>
-    `;
+    return html` <ing-login></ing-login> `;
   }
 }
 

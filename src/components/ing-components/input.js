@@ -1,6 +1,6 @@
 import { LionInput } from '@lion/input';
 import { CustomRequired } from '../../validators/custom-required.js';
-import { inputStyles } from './inputStyles.js';
+import { inputStyles } from './input.style.js';
 
 class IngInput extends LionInput {
   static get properties() {

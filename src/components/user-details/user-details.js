@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import { userDetailsStyles } from './user-details-style.js';
+import { userDetailsStyles } from './user-details.style.js';
 
 import '@lion/form/define';
 import '../ing-components/input.js';
