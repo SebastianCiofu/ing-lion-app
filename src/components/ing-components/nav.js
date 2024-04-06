@@ -10,8 +10,8 @@ class IngNav extends LitElement {
         background-color: #f9f9f9;
         color: #fff;
         padding: 10px;
-        position: sticky; /* Add this line */
-        top: 0; /* Add this line */
+        position: sticky;
+        top: 0;
         z-index: 99;
       }
 

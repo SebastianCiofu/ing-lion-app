@@ -12,6 +12,7 @@ import '../ing-components/input-iban.js';
 import '@lion/ui/define/lion-calendar.js';
 import '@lion/ui/define/lion-option.js';
 import '../ing-components/select.js';
+import './person-info.js';
 
 class IngUserDetails extends LitElement {
   static get styles() {
@@ -21,10 +22,8 @@ class IngUserDetails extends LitElement {
   static get properties() {
     return {
       darkMode: { type: Boolean, reflect: true }, // Reflect the property to allow attribute binding
-      editPersonalInfo: { type: Boolean },
       notifications: { type: Array },
       response: { type: Array },
-      user: { type: Object },
       newAssociate: { type: String },
     };
   }
@@ -32,36 +31,13 @@ class IngUserDetails extends LitElement {
   constructor() {
     super();
     this.darkMode = false; // Default to light mode
-    this.editPersonalInfo = false;
     this.notifications = [
       { title: 'Deposit', value: 'DEP' },
       { title: 'Credit', value: 'CRE' },
       { title: 'Salary', value: 'SAL' },
     ];
     this.response = [];
-    this.user = {
-      firstName: 'Joe',
-      lastName: 'Doe',
-      email: 'email@domain.com',
-      iban: 'NL20INGB0001234567',
-    };
     this.newAssociate = '';
-  }
-
-  get firstNameInput() {
-    return this.shadowRoot.getElementById('firstNameInput');
-  }
-
-  get lastNameInput() {
-    return this.shadowRoot.getElementById('lastNameInput');
-  }
-
-  get emailInput() {
-    return this.shadowRoot.getElementById('emailInput');
-  }
-
-  get ibanInput() {
-    return this.shadowRoot.getElementById('ibanInput');
   }
 
   firstUpdated() {
@@ -70,15 +46,6 @@ class IngUserDetails extends LitElement {
       .then(r => {
         this.response = r.results.slice(0, 5);
       });
-  }
-
-  _handleEdit() {
-    this.editPersonalInfo = !this.editPersonalInfo;
-  }
-
-  _handleSave() {
-    const dialog = this.shadowRoot.querySelector('ing-dialog');
-    dialog.opened = true;
   }
 
   _handleDelete(event) {
@@ -101,20 +68,6 @@ class IngUserDetails extends LitElement {
     associates.appendChild(li);
   }
 
-  _confirmSave() {
-    this.user.firstName = this.firstNameInput.value;
-    this.user.lastName = this.lastNameInput.value;
-    this.user.email = this.emailInput.value;
-    this.user.iban = this.ibanInput.value;
-
-    this._handleEdit();
-    this.shadowRoot.querySelector('ing-dialog').opened = false;
-  }
-
-  _cancelSave() {
-    this.shadowRoot.querySelector('ing-dialog').opened = false;
-  }
-
   _toggleDarkMode(event) {
     this.darkMode = event.target.checked;
   }
@@ -128,77 +81,14 @@ class IngUserDetails extends LitElement {
         <h2>User Profile</h2>
 
         <div class="section">
-          <h3>Personal Information</h3>
-
-          ${this.editPersonalInfo
-        ? html`
-                <lion-form>
-                  <form>
-                    <ing-input
-                      .modelValue=${this.user.firstName}
-                      id="firstNameInput"
-                      name="firstName"
-                      label="First Name"
-                    ></ing-input>
-                    <ing-input
-                      .modelValue=${this.user.lastName}
-                      id="lastNameInput"
-                      name="lastName"
-                      label="Last Name"
-                    ></ing-input>
-                    <ing-input
-                      .modelValue=${this.user.email}
-                      id="emailInput"
-                      name="email"
-                      label="Email"
-                      type="email"
-                    ></ing-input>
-                    <ing-input-iban
-                      .modelValue=${this.user.iban}
-                      id="ibanInput"
-                      name="iban"
-                      label="IBAN"
-                    ></ing-input-iban>
-                  </form>
-                </lion-form>
-
-                <div class="button-container">
-                  <ing-button
-                    slot="invoker"
-                    @click=${this._handleSave}
-                    class="${this.darkMode ? 'btn-dark' : ''}"
-                    >Save Changes</ing-button
-                  >
-                  <ing-dialog>
-                    <div slot="content" class="dialog-content">
-                      Are you sure you want to save changes?
-                      <ing-button @click="${this._confirmSave}">Yes</ing-button>
-                      <ing-button @click="${this._cancelSave}">No</ing-button>
-                    </div>
-                  </ing-dialog>
-                </div>
-              `
-        : html`
-                <p><strong>First Name: </strong>${this.user.firstName}</p>
-                <p><strong>Last Name: </strong>${this.user.lastName}</p>
-                <p><strong>Email: </strong> ${this.user.email}</p>
-                <p><strong>IBAN: </strong> ${this.user.iban}</p>
-
-                <div class="button-container">
-                  <ing-button
-                    @click=${this._handleEdit}
-                    class="${this.darkMode ? 'btn-dark' : ''}"
-                    >Edit</ing-button
-                  >
-                </div>
-              `}
+        <ing-personal-info></ing-personal-info>
         </div>
 
         <div class="section friends-section">
           <h3>Associates</h3>
           <ul>
             ${response.map(
-          item => html` <li>
+      item => html` <li>
                 <p>${item.name}</p>
                 <ing-button
                   @click="${this._handleDelete}"
@@ -206,7 +96,7 @@ class IngUserDetails extends LitElement {
                   >Delete</ing-button
                 >
               </li>`
-        )}
+    )}
           </ul>
           <ing-input
             .modelValue=${this.newAssociate}
@@ -261,14 +151,14 @@ class IngUserDetails extends LitElement {
             <span class="setting-label">Notifications</span>
             <ing-checkbox-group name="notifications[]" label="Notifications">
               ${this.notifications.map(
-          notification =>
-            html`
+      notification =>
+        html`
                     <lion-checkbox
                       label=${notification.title}
                       .choiceValue=${notification.value}
                     ></lion-checkbox>
                   `
-        )}
+    )}
             </ing-checkbox-group>
           </div>
         </div>
