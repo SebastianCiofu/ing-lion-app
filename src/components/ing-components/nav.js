@@ -8,7 +8,7 @@ class IngNav extends LitElement {
     return css`
       :host {
         display: block;
-        background-color: #333;
+        background-color: #1a2b42;
         color: #fff;
         padding: 10px;
       }

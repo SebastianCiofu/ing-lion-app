@@ -95,6 +95,8 @@ class IngUserDetails extends LitElement {
       darkMode: { type: Boolean, reflect: true }, // Reflect the property to allow attribute binding
       editPersonalInfo: { type: Boolean },
       notifications: { type: Array },
+      response: { type: Array },
+      user: { type: Object }
     };
   }
 
@@ -107,14 +109,45 @@ class IngUserDetails extends LitElement {
       { title: 'Credit', value: 'CRE' },
       { title: 'Salary', value: 'SAL' },
     ];
+    this.response = [];
+    this.user = {
+      firstName: 'Joe',
+      lastName: 'Doe',
+      email: 'email@domain.com'
+    }
+  }
+
+  get firstNameInput() {
+    return this.shadowRoot.getElementById("firstNameInput");
+  }
+
+  get lastNameInput() {
+    return this.shadowRoot.getElementById("lastNameInput");
+  }
+
+  get emailInput() {
+    return this.shadowRoot.getElementById("emailInput");
+  }
+
+  firstUpdated() {
+    fetch('https://swapi.dev/api/people/')
+      .then(r => r.json())
+      .then(r => {
+        this.response = r.results;
+      });
   }
 
   _handleEdit() {
     this.editPersonalInfo = !this.editPersonalInfo;
+
   }
 
   _handleSave() {
-    this._handleEdit();
+    this.user.firstName = this.firstNameInput.value
+    this.user.lastName = this.lastNameInput.value
+    this.user.email = this.emailInput.value
+
+    this.handleEdit();
   }
 
   _toggleDarkMode(event) {
@@ -122,6 +155,8 @@ class IngUserDetails extends LitElement {
   }
 
   render() {
+    const { response } = this;
+
     return html`
       <ing-nav></ing-nav>
       <div class="container ${this.darkMode ? 'dark-mode' : 'light-mode'}">
@@ -133,9 +168,9 @@ class IngUserDetails extends LitElement {
         ? html`
                 <lion-form>
                   <form>
-                    <ing-input name="firstName" label="First Name"></ing-input>
-                    <ing-input name="lastName" label="Last Name"></ing-input>
-                    <ing-input name="email" label="Email"></ing-input>
+                    <ing-input id="firstNameInput" name="firstName" label="First Name"></ing-input>
+                    <ing-input id="lastNameInput" name="lastName" label="Last Name"></ing-input>
+                    <ing-input id="emailInput" name="email" label="Email"></ing-input>
                   </form>
                 </lion-form>
 
@@ -148,9 +183,9 @@ class IngUserDetails extends LitElement {
                 </div>
               `
         : html`
-                <p>John</p>
-                <p>Doe</p>
-                <p>email@domain.com</p>
+                <p>First Name: ${this.user.firstName}</p>
+                <p>Last Name: ${this.user.lastName}</p>
+                <p>Email: ${this.user.email}</p>
 
                 <div class="button-container">
                   <ing-button
@@ -160,6 +195,13 @@ class IngUserDetails extends LitElement {
                   >
                 </div>
               `}
+        </div>
+
+        <div class="section">
+          <h3>Friends</h3>
+          <ul>
+            ${response.map(item => html` <li>${item.name}</li> `)}
+          </ul>
         </div>
 
         <div class="section">
