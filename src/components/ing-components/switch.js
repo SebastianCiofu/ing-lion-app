@@ -1,4 +1,4 @@
-import { LionSwitch } from '@lion/switch';
+import { LionSwitch } from '@lion/ui/switch.js';
 
 class IngSwitch extends LionSwitch {
 }

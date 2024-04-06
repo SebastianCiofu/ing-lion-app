@@ -5,6 +5,7 @@ import '../ing-components/button.js';
 import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
 import '../ing-components/nav.js';
+import '../ing-components/dialog.js';
 
 class IngUserDetails extends LitElement {
   static get styles() {
@@ -87,6 +88,27 @@ class IngUserDetails extends LitElement {
       .setting-toggle {
         margin-left: 20px;
       }
+
+      .friends-section {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+
+      .friends-section ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .friends-section ul li {
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .friends-section ul li:last-child {
+        border-bottom: none;
+      }
     `;
   }
 
@@ -96,7 +118,7 @@ class IngUserDetails extends LitElement {
       editPersonalInfo: { type: Boolean },
       notifications: { type: Array },
       response: { type: Array },
-      user: { type: Object }
+      user: { type: Object },
     };
   }
 
@@ -113,20 +135,20 @@ class IngUserDetails extends LitElement {
     this.user = {
       firstName: 'Joe',
       lastName: 'Doe',
-      email: 'email@domain.com'
-    }
+      email: 'email@domain.com',
+    };
   }
 
   get firstNameInput() {
-    return this.shadowRoot.getElementById("firstNameInput");
+    return this.shadowRoot.getElementById('firstNameInput');
   }
 
   get lastNameInput() {
-    return this.shadowRoot.getElementById("lastNameInput");
+    return this.shadowRoot.getElementById('lastNameInput');
   }
 
   get emailInput() {
-    return this.shadowRoot.getElementById("emailInput");
+    return this.shadowRoot.getElementById('emailInput');
   }
 
   firstUpdated() {
@@ -139,15 +161,24 @@ class IngUserDetails extends LitElement {
 
   _handleEdit() {
     this.editPersonalInfo = !this.editPersonalInfo;
-
   }
 
   _handleSave() {
-    this.user.firstName = this.firstNameInput.value
-    this.user.lastName = this.lastNameInput.value
-    this.user.email = this.emailInput.value
+    const dialog = this.shadowRoot.querySelector('ing-dialog');
+    dialog.opened = true;
+  }
 
-    this.handleEdit();
+  _confirmSave() {
+    this.user.firstName = this.firstNameInput.value;
+    this.user.lastName = this.lastNameInput.value;
+    this.user.email = this.emailInput.value;
+
+    this._handleEdit();
+    this.shadowRoot.querySelector('ing-dialog').opened = false;
+  }
+
+  _cancelSave() {
+    this.shadowRoot.querySelector('ing-dialog').opened = false;
   }
 
   _toggleDarkMode(event) {
@@ -160,7 +191,16 @@ class IngUserDetails extends LitElement {
     return html`
       <ing-nav></ing-nav>
       <div class="container ${this.darkMode ? 'dark-mode' : 'light-mode'}">
+      <ing-dialog>
+        <div slot="content" class="dialog-content">
+          Are you sure you want to save changes?
+          <ing-button @click="${this._confirmSave}">Yes</ing-button>
+          <ing-button @click="${this._cancelSave}">No</ing-button>
+        </div>
+      </ing-dialog>
+
         <h2>User Profile</h2>
+
         <div class="section">
           <h3>Personal Information</h3>
 
@@ -168,9 +208,24 @@ class IngUserDetails extends LitElement {
         ? html`
                 <lion-form>
                   <form>
-                    <ing-input id="firstNameInput" name="firstName" label="First Name"></ing-input>
-                    <ing-input id="lastNameInput" name="lastName" label="Last Name"></ing-input>
-                    <ing-input id="emailInput" name="email" label="Email"></ing-input>
+                    <ing-input
+                      .modelValue=${this.user.firstName}
+                      id="firstNameInput"
+                      name="firstName"
+                      label="First Name"
+                    ></ing-input>
+                    <ing-input
+                      .modelValue=${this.user.lastName}
+                      id="lastNameInput"
+                      name="lastName"
+                      label="Last Name"
+                    ></ing-input>
+                    <ing-input
+                      .modelValue=${this.user.email}
+                      id="emailInput"
+                      name="email"
+                      label="Email"
+                    ></ing-input>
                   </form>
                 </lion-form>
 
@@ -183,9 +238,9 @@ class IngUserDetails extends LitElement {
                 </div>
               `
         : html`
-                <p>First Name: ${this.user.firstName}</p>
-                <p>Last Name: ${this.user.lastName}</p>
-                <p>Email: ${this.user.email}</p>
+                <p><strong>First Name: </strong>${this.user.firstName}</p>
+                <p><strong>Last Name: </strong>${this.user.lastName}</p>
+                <p><strong>Email: </strong> ${this.user.email}</p>
 
                 <div class="button-container">
                   <ing-button
@@ -197,7 +252,7 @@ class IngUserDetails extends LitElement {
               `}
         </div>
 
-        <div class="section">
+        <div class="section friends-section">
           <h3>Friends</h3>
           <ul>
             ${response.map(item => html` <li>${item.name}</li> `)}
