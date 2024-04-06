@@ -32,8 +32,15 @@ class IngLogin extends LitElement {
         margin-top: 1rem;
       }
 
-      h1 {
+      h4 {
         color: #ff6600;
+      }
+
+      small {
+        display: block;
+        margin-top: 1rem;
+        color: gray;
+        font-size: 16px;
       }
     `;
   }
@@ -46,7 +53,7 @@ class IngLogin extends LitElement {
 
   constructor() {
     super();
-    this.header = 'Login ING';
+    this.header = 'Login';
   }
 
   _handleLogin(event) {
@@ -70,14 +77,16 @@ class IngLogin extends LitElement {
   render() {
     return html`
       <div class="login-form">
-        <h1>${this.header}</h1>
+        <img src="/assets/ing.svg" alt="ING Logo" />
+        <h2>${this.header}</h2>
         <lion-form>
           <form @submit=${ev => ev.preventDefault()}>
-            <ing-input type="email" name="email" label="Email"></ing-input>
-            <ing-input type="password" name="password" label="Password"></ing-input>
+            <ing-input type="email" name="email" label="Email" placeholder="email@domain.com"></ing-input>
+            <ing-input type="password" name="password" label="Password" placeholder="Password"></ing-input>
           </form>
         </lion-form>
         <ing-button @click=${this._handleLogin}>Log In</ing-button>
+        <small>&copy; Copyright</small>
       </div>
     `;
   }

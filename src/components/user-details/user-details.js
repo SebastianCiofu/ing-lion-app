@@ -1,4 +1,6 @@
-import { LitElement, css, html } from 'lit';
+import { LitElement, html } from 'lit';
+import { userDetailsStyles } from './user-details-style.js';
+
 import '@lion/form/define';
 import '../ing-components/input.js';
 import '../ing-components/button.js';
@@ -6,110 +8,14 @@ import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
 import '../ing-components/nav.js';
 import '../ing-components/dialog.js';
+import '../ing-components/input-iban.js';
+import '@lion/ui/define/lion-calendar.js';
+import '@lion/ui/define/lion-option.js';
+import '../ing-components/select.js';
 
 class IngUserDetails extends LitElement {
   static get styles() {
-    return css`
-      .container.light-mode {
-        --bg-color: #f9f9f9;
-        --text-color: #1a2b42;
-      }
-
-      .container.dark-mode {
-        --bg-color: #1a2b42;
-        --text-color: #ffffff;
-      }
-
-      .container {
-        max-width: 800px;
-        margin: 12px auto;
-        padding: 20px;
-        border: 1px solid lightgrey;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        background-color: var(--bg-color);
-        color: var(--text-color);
-      }
-
-      h2 {
-        color: #1a2b42;
-      }
-
-      .section {
-        margin-bottom: 20px;
-      }
-
-      .button-container {
-        margin-top: 20px;
-        text-align: center;
-      }
-
-      .btn-dark {
-        background-color: white;
-        color: #1a2b42;
-      }
-
-      .chart {
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        background-color: #f5f5f5;
-        padding: 20px;
-        margin-bottom: 20px;
-      }
-
-      .chart-title {
-        margin-bottom: 10px;
-        font-size: 18px;
-        color: #333;
-      }
-
-      .chart-content {
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .chart-content-dark {
-        color: #1a2b42;
-      }
-
-      .settings {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-      }
-
-      .setting-label {
-        font-weight: bold;
-      }
-
-      .setting-toggle {
-        margin-left: 20px;
-      }
-
-      .friends-section {
-        background-color: #f5f5f5;
-        padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-      }
-
-      .friends-section ul {
-        list-style-type: none;
-        padding: 0;
-      }
-
-      .friends-section ul li {
-        padding: 10px 0;
-        border-bottom: 1px solid #ccc;
-      }
-
-      .friends-section ul li:last-child {
-        border-bottom: none;
-      }
-    `;
+    return userDetailsStyles;
   }
 
   static get properties() {
@@ -119,6 +25,7 @@ class IngUserDetails extends LitElement {
       notifications: { type: Array },
       response: { type: Array },
       user: { type: Object },
+      newAssociate: { type: String },
     };
   }
 
@@ -136,7 +43,9 @@ class IngUserDetails extends LitElement {
       firstName: 'Joe',
       lastName: 'Doe',
       email: 'email@domain.com',
+      iban: 'NL20INGB0001234567',
     };
+    this.newAssociate = '';
   }
 
   get firstNameInput() {
@@ -151,11 +60,15 @@ class IngUserDetails extends LitElement {
     return this.shadowRoot.getElementById('emailInput');
   }
 
+  get ibanInput() {
+    return this.shadowRoot.getElementById('ibanInput');
+  }
+
   firstUpdated() {
     fetch('https://swapi.dev/api/people/')
       .then(r => r.json())
       .then(r => {
-        this.response = r.results;
+        this.response = r.results.slice(0, 5);
       });
   }
 
@@ -168,10 +81,31 @@ class IngUserDetails extends LitElement {
     dialog.opened = true;
   }
 
+  _handleDelete(event) {
+    const item = event.target.parentElement;
+    item.remove();
+  }
+
+  _handleAddAssociate() {
+    const associates = this.shadowRoot.querySelector('.friends-section ul');
+    const li = document.createElement('li');
+    const button = document.createElement('ing-button');
+
+    button.textContent = 'Delete';
+    button.classList.add('secondary__btn');
+    button.addEventListener('click', this._handleDelete.bind(this));
+    li.innerHTML = `<p>${this.shadowRoot.getElementById('newAssociateInput').value
+      }</p>`;
+
+    li.appendChild(button);
+    associates.appendChild(li);
+  }
+
   _confirmSave() {
     this.user.firstName = this.firstNameInput.value;
     this.user.lastName = this.lastNameInput.value;
     this.user.email = this.emailInput.value;
+    this.user.iban = this.ibanInput.value;
 
     this._handleEdit();
     this.shadowRoot.querySelector('ing-dialog').opened = false;
@@ -191,14 +125,6 @@ class IngUserDetails extends LitElement {
     return html`
       <ing-nav></ing-nav>
       <div class="container ${this.darkMode ? 'dark-mode' : 'light-mode'}">
-      <ing-dialog>
-        <div slot="content" class="dialog-content">
-          Are you sure you want to save changes?
-          <ing-button @click="${this._confirmSave}">Yes</ing-button>
-          <ing-button @click="${this._cancelSave}">No</ing-button>
-        </div>
-      </ing-dialog>
-
         <h2>User Profile</h2>
 
         <div class="section">
@@ -225,22 +151,38 @@ class IngUserDetails extends LitElement {
                       id="emailInput"
                       name="email"
                       label="Email"
+                      type="email"
                     ></ing-input>
+                    <ing-input-iban
+                      .modelValue=${this.user.iban}
+                      id="ibanInput"
+                      name="iban"
+                      label="IBAN"
+                    ></ing-input-iban>
                   </form>
                 </lion-form>
 
                 <div class="button-container">
                   <ing-button
+                    slot="invoker"
                     @click=${this._handleSave}
                     class="${this.darkMode ? 'btn-dark' : ''}"
                     >Save Changes</ing-button
                   >
+                  <ing-dialog>
+                    <div slot="content" class="dialog-content">
+                      Are you sure you want to save changes?
+                      <ing-button @click="${this._confirmSave}">Yes</ing-button>
+                      <ing-button @click="${this._cancelSave}">No</ing-button>
+                    </div>
+                  </ing-dialog>
                 </div>
               `
         : html`
                 <p><strong>First Name: </strong>${this.user.firstName}</p>
                 <p><strong>Last Name: </strong>${this.user.lastName}</p>
                 <p><strong>Email: </strong> ${this.user.email}</p>
+                <p><strong>IBAN: </strong> ${this.user.iban}</p>
 
                 <div class="button-container">
                   <ing-button
@@ -253,14 +195,38 @@ class IngUserDetails extends LitElement {
         </div>
 
         <div class="section friends-section">
-          <h3>Friends</h3>
+          <h3>Associates</h3>
           <ul>
-            ${response.map(item => html` <li>${item.name}</li> `)}
+            ${response.map(
+          item => html` <li>
+                <p>${item.name}</p>
+                <ing-button
+                  @click="${this._handleDelete}"
+                  class="secondary__btn"
+                  >Delete</ing-button
+                >
+              </li>`
+        )}
           </ul>
+          <ing-input
+            .modelValue=${this.newAssociate}
+            type="text"
+            placeholder="New Associate"
+            id="newAssociateInput"
+          ></ing-input>
+          <ing-button
+            @click="${this._handleAddAssociate}"
+            class="secondary__btn secondary__btn--add"
+            >Add</ing-button
+          >
         </div>
 
         <div class="section">
           <h3>Account Details</h3>
+          <ing-select name="accountType" label="Account Type">
+            <lion-option .choiceValue=${'personal'}>Personal</lion-option>
+            <lion-option .choiceValue=${'business'}>Business</lion-option>
+          </ing-select>
         </div>
 
         <div class="section">
@@ -305,6 +271,15 @@ class IngUserDetails extends LitElement {
         )}
             </ing-checkbox-group>
           </div>
+        </div>
+
+        <div class="section">
+          <h3>Calendar</h3>
+
+          <lion-calendar
+            class="calendar"
+            .selectedDate=${new Date()}
+          ></lion-calendar>
         </div>
       </div>
     `;

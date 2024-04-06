@@ -1,4 +1,3 @@
-
 import { LitElement, html, css } from 'lit';
 import { Router } from '@vaadin/router';
 import './button.js';
@@ -8,15 +7,23 @@ class IngNav extends LitElement {
     return css`
       :host {
         display: block;
-        background-color: #1a2b42;
+        background-color: #f9f9f9;
         color: #fff;
         padding: 10px;
+        position: sticky; /* Add this line */
+        top: 0; /* Add this line */
+        z-index: 99;
       }
 
-      header {
+      .nav__container {
+        margin: 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+      }
+
+      img {
+        width: 200px;
       }
     `;
   }
@@ -32,8 +39,10 @@ class IngNav extends LitElement {
   render() {
     return html`
       <header>
-        <h1>ING App</h1>
-        <ing-button @click=${this._logout}>Logout</ing-button>
+        <div class="nav__container">
+          <img src="/assets/ing.svg" alt="ING Logo" />
+          <ing-button @click=${this._logout}>Logout</ing-button>
+        </div>
       </header>
     `;
   }
