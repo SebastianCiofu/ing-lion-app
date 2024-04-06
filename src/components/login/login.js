@@ -62,6 +62,7 @@ class IngLogin extends LitElement {
     } else {
       localStorage.setItem('isLoggedIn', 'true');
       this.requestUpdate();
+
       Router.go('/user-details');
     }
   }
@@ -72,8 +73,8 @@ class IngLogin extends LitElement {
         <h1>${this.header}</h1>
         <lion-form>
           <form @submit=${ev => ev.preventDefault()}>
-            <ing-input name="firstName" label="First Name"></ing-input>
-            <ing-input name="lastName" label="Last Name"></ing-input>
+            <ing-input type="email" name="email" label="Email"></ing-input>
+            <ing-input type="password" name="password" label="Password"></ing-input>
           </form>
         </lion-form>
         <ing-button @click=${this._handleLogin}>Log In</ing-button>

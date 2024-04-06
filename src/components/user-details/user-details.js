@@ -4,15 +4,30 @@ import '../ing-components/input.js';
 import '../ing-components/button.js';
 import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
-import '../ing-components/nav.js'
+import '../ing-components/nav.js';
 
 class IngUserDetails extends LitElement {
   static get styles() {
     return css`
+      .container.light-mode {
+        --bg-color: #f9f9f9;
+        --text-color: #1a2b42;
+      }
+
+      .container.dark-mode {
+        --bg-color: #1a2b42;
+        --text-color: #ffffff;
+      }
+
       .container {
         max-width: 800px;
-        margin: 0 auto;
+        margin: 12px auto;
         padding: 20px;
+        border: 1px solid lightgrey;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        background-color: var(--bg-color);
+        color: var(--text-color);
       }
 
       h2 {
@@ -26,6 +41,11 @@ class IngUserDetails extends LitElement {
       .button-container {
         margin-top: 20px;
         text-align: center;
+      }
+
+      .btn-dark {
+        background-color: white;
+        color: #1a2b42;
       }
 
       .chart {
@@ -49,6 +69,10 @@ class IngUserDetails extends LitElement {
         justify-content: center;
       }
 
+      .chart-content-dark {
+        color: #1a2b42;
+      }
+
       .settings {
         display: flex;
         align-items: center;
@@ -66,20 +90,76 @@ class IngUserDetails extends LitElement {
     `;
   }
 
+  static get properties() {
+    return {
+      darkMode: { type: Boolean, reflect: true }, // Reflect the property to allow attribute binding
+      editPersonalInfo: { type: Boolean },
+      notifications: { type: Array },
+    };
+  }
+
+  constructor() {
+    super();
+    this.darkMode = false; // Default to light mode
+    this.editPersonalInfo = false;
+    this.notifications = [
+      { title: 'Deposit', value: 'DEP' },
+      { title: 'Credit', value: 'CRE' },
+      { title: 'Salary', value: 'SAL' },
+    ];
+  }
+
+  _handleEdit() {
+    this.editPersonalInfo = !this.editPersonalInfo;
+  }
+
+  _handleSave() {
+    this._handleEdit();
+  }
+
+  _toggleDarkMode(event) {
+    this.darkMode = event.target.checked;
+  }
+
   render() {
     return html`
       <ing-nav></ing-nav>
-      <div class="container">
+      <div class="container ${this.darkMode ? 'dark-mode' : 'light-mode'}">
         <h2>User Profile</h2>
         <div class="section">
           <h3>Personal Information</h3>
-          <lion-form>
-            <form>
-              <ing-input name="firstName" label="First Name"></ing-input>
-              <ing-input name="lastName" label="Last Name"></ing-input>
-              <ing-input name="email" label="Email"></ing-input>
-            </form>
-          </lion-form>
+
+          ${this.editPersonalInfo
+        ? html`
+                <lion-form>
+                  <form>
+                    <ing-input name="firstName" label="First Name"></ing-input>
+                    <ing-input name="lastName" label="Last Name"></ing-input>
+                    <ing-input name="email" label="Email"></ing-input>
+                  </form>
+                </lion-form>
+
+                <div class="button-container">
+                  <ing-button
+                    @click=${this._handleSave}
+                    class="${this.darkMode ? 'btn-dark' : ''}"
+                    >Save Changes</ing-button
+                  >
+                </div>
+              `
+        : html`
+                <p>John</p>
+                <p>Doe</p>
+                <p>email@domain.com</p>
+
+                <div class="button-container">
+                  <ing-button
+                    @click=${this._handleEdit}
+                    class="${this.darkMode ? 'btn-dark' : ''}"
+                    >Edit</ing-button
+                  >
+                </div>
+              `}
         </div>
 
         <div class="section">
@@ -92,41 +172,42 @@ class IngUserDetails extends LitElement {
 
         <div class="chart section">
           <div class="chart-title">Balance Overview</div>
-          <div class="chart-content">Balance Chart</div>
+          <div
+            class="chart-content ${this.darkMode ? 'chart-content-dark' : ''}"
+          >
+            Balance Chart
+          </div>
         </div>
 
         <div class="chart section">
           <div class="chart-title">Spending Analysis</div>
-          <div class="chart-content">Spending Chart</div>
+          <div
+            class="chart-content ${this.darkMode ? 'chart-content-dark' : ''}"
+          >
+            Spending Chart
+          </div>
         </div>
 
         <div class="section">
           <h3>Settings</h3>
           <div class="settings">
             <span class="setting-label">Dark Mode</span>
-            <ing-switch></ing-switch>
+            <ing-switch @click=${this._toggleDarkMode}></ing-switch>
           </div>
           <div class="settings">
             <span class="setting-label">Notifications</span>
-            <ing-checkbox-group name="numbers[]" label="Numbers">
-              <lion-checkbox
-                label="1"
-                .choiceValue=${'1'}
-              ></lion-checkbox>
-              <lion-checkbox
-                label="2"
-                .choiceValue=${'2'}
-              ></lion-checkbox>
-              <lion-checkbox
-                label="3"
-                .choiceValue=${'3'}
-              ></lion-checkbox>
+            <ing-checkbox-group name="notifications[]" label="Notifications">
+              ${this.notifications.map(
+          notification =>
+            html`
+                    <lion-checkbox
+                      label=${notification.title}
+                      .choiceValue=${notification.value}
+                    ></lion-checkbox>
+                  `
+        )}
             </ing-checkbox-group>
           </div>
-        </div>
-
-        <div class="button-container">
-          <ing-button>Save Changes</ing-button>
         </div>
       </div>
     `;
