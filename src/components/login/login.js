@@ -60,7 +60,6 @@ class IngLogin extends LitElement {
 
       firstInvalidInput.focus();
     } else {
-      this.header = 'Logged In';
       localStorage.setItem('isLoggedIn', 'true');
       this.requestUpdate();
       Router.go('/user-details');

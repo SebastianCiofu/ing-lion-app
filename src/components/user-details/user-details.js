@@ -4,6 +4,7 @@ import '../ing-components/input.js';
 import '../ing-components/button.js';
 import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
+import '../ing-components/nav.js'
 
 class IngUserDetails extends LitElement {
   static get styles() {
@@ -67,9 +68,9 @@ class IngUserDetails extends LitElement {
 
   render() {
     return html`
+      <ing-nav></ing-nav>
       <div class="container">
         <h2>User Profile</h2>
-
         <div class="section">
           <h3>Personal Information</h3>
           <lion-form>
