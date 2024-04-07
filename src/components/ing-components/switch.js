@@ -6,6 +6,9 @@ class IngSwitch extends LionSwitch {
   static get styles() {
     return [
       css`
+        :host {
+          margin-right: 60px;
+        }
       `,
     ];
   }

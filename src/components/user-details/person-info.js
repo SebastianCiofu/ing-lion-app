@@ -1,17 +1,10 @@
 import { LitElement, html } from 'lit';
 import { userDetailsStyles } from './user-details.style.js';
-
 import '@lion/form/define';
 import '../ing-components/input.js';
 import '../ing-components/button.js';
-import '../ing-components/switch.js';
-import '../ing-components/checkbox-group.js';
-import '../ing-components/nav.js';
 import '../ing-components/dialog.js';
 import '../ing-components/input-iban.js';
-import '@lion/ui/define/lion-calendar.js';
-import '@lion/ui/define/lion-option.js';
-import '../ing-components/select.js';
 
 class IngPersonalInfo extends LitElement {
   static get styles() {

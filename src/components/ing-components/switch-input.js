@@ -6,10 +6,6 @@ class IngSwitchInput extends LionSwitchButton {
     return [
       super.styles,
       css`
-       :host {
-          margin-right: 60px;
-        }
-
         .btn {
           position: relative;
           display: inline-block;

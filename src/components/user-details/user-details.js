@@ -11,8 +11,6 @@ import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
 import '../ing-components/checkbox.js';
 import '../ing-components/nav.js';
-import '../ing-components/dialog.js';
-import '../ing-components/input-iban.js';
 import '../ing-components/select.js';
 import '../ing-components/spinner.js';
 import './person-info.js';
@@ -163,7 +161,7 @@ class IngUserDetails extends LitElement {
           <h3>Settings</h3>
           <div class="settings">
             <span class="setting-label">Dark Mode</span>
-            <ing-switch @click=${this._toggleDarkMode}></ing-switch>
+            <ing-switch @click=${this.toggleDarkMode} aria-label="Toggle dark mode"></ing-switch>
           </div>
           <div class="settings">
             <span class="setting-label">Notifications</span>
