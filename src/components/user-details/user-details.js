@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { LitElement, html } from 'lit';
 import { userDetailsStyles } from './user-details.style.js';
 
@@ -75,7 +76,7 @@ class IngUserDetails extends LitElement {
     associates.appendChild(li);
   }
 
-  _toggleDarkMode(event) {
+  toggleDarkMode(event) {
     this.darkMode = event.target.checked;
   }
 
