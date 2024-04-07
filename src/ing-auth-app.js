@@ -2,6 +2,7 @@ import { Router } from '@vaadin/router';
 import { LitElement, html } from 'lit';
 import './components/login/login.js';
 import './components/user-details/user-details.js';
+import './components/not-found/not-found.js';
 
 class IngAuthApp extends LitElement {
   firstUpdated() {
@@ -10,6 +11,7 @@ class IngAuthApp extends LitElement {
     router.setRoutes([
       { path: '/', component: 'ing-login' },
       { path: '/user-details', component: 'ing-user-details' },
+      { path: '(.*)', component: 'ing-not-found' },
     ]);
 
     router.beforeEach((context, commands) => {
@@ -25,7 +27,7 @@ class IngAuthApp extends LitElement {
   }
 
   render() {
-    return html` <div id="router-outlet"></div> `;
+    return html`<div id="router-outlet"></div>`;
   }
 }
 
