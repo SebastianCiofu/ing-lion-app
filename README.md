@@ -1,31 +1,36 @@
-<p align="center">
-  <img width="200" src="https://open-wc.org/hero.png"></img>
-</p>
+# ING Authentication Application
 
-## Open-wc Starter App
+This application is a simple authentication system built with LitElement and Lion Web Components.
 
-[![Built with open-wc recommendations](https://img.shields.io/badge/built%20with-open--wc-blue.svg)](https://github.com/open-wc)
+## Table of contents
 
-## Quickstart
+- [Overview](#overview)
+- [Built with](#built-with)
+- [Author](#author)
 
-To get started:
+## Overview
 
-```bash
-npm init @open-wc
-# requires node 10 & npm 6 or higher
-```
+Users are able to:
 
-## Scripts
+- Log in to the application
+- View and edit their user details
+- Add/Delete associates
+- Dark mode
+- View calendar
+- Log out of the application
 
-- `start` runs your app for development, reloading on file changes
-- `start:build` runs your app after it has been built using the build command
-- `build` builds your app and outputs it in your `dist` directory
-- `test` runs your test suite with Web Test Runner
-- `lint` runs the linter for your project
-- `format` fixes linting and formatting errors
+<img src="./assets/app.gif" alt="Demo example"/>
+    <br>
+    <br>
 
-## Tooling configs
+### Built with
 
-For most of the tools, the configuration is in the `package.json` to reduce the amount of files in your project.
+- HTML5 markup
+- CSS
+- [Lion](https://github.com/ing-bank/lion)
+- [Open Web Components](https://open-wc.org/)
+- [Vaadin Router](https://vaadin.com/router)
 
-If you customize the configuration a lot, you can consider moving them to individual files.
+## Author
+
+- LinkedIn - (https://www.linkedin.com/in/sebastian-ciofu/)
