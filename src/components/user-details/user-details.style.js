@@ -32,7 +32,6 @@ export const userDetailsStyles = css`
 
   .button-container {
     margin-top: 20px;
-    text-align: center;
   }
 
   .btn-dark {
@@ -61,7 +60,7 @@ export const userDetailsStyles = css`
     justify-content: center;
   }
 
-  .chart-content-dark {
+  .content-dark {
     color: #1a2b42;
   }
 
@@ -116,10 +115,8 @@ export const userDetailsStyles = css`
   }
 
   .calendar {
-    border: 1px solid #adadad;
     box-shadow: 0 0 16px #ccc;
-    max-width: 500px;
     background-color: #f9f9f9;
-    color: #1a2b42;
+    color: #ff6200;
   }
 `;

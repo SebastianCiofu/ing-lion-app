@@ -27,7 +27,14 @@ class IngLogin extends LitElement {
         background: #ffffff;
       }
 
-      ing-button, ing-input {
+      @media screen and (max-width: 500px) {
+        .login-form {
+          max-width: 300px;
+        }
+      }
+
+      ing-button,
+      ing-input {
         margin-top: 1rem;
       }
 
@@ -65,8 +72,9 @@ class IngLogin extends LitElement {
     form.submit();
 
     if (form.hasFeedbackFor.includes('error')) {
-      const firstInvalidInput = [...form.formElements]
-        .find(input => input.hasFeedbackFor.includes('error'));
+      const firstInvalidInput = [...form.formElements].find(input =>
+        input.hasFeedbackFor.includes('error')
+      );
 
       firstInvalidInput.focus();
     } else {
@@ -84,8 +92,18 @@ class IngLogin extends LitElement {
         <h2>${this.header}</h2>
         <lion-form>
           <form @submit=${ev => ev.preventDefault()}>
-            <ing-input type="email" name="email" label="Email" placeholder="email@domain.com"></ing-input>
-            <ing-input type="password" name="password" label="Password" placeholder="Password"></ing-input>
+            <ing-input
+              type="email"
+              name="email"
+              label="Email"
+              placeholder="email@domain.com"
+            ></ing-input>
+            <ing-input
+              type="password"
+              name="password"
+              label="Password"
+              placeholder="Password"
+            ></ing-input>
           </form>
         </lion-form>
         <ing-button @click=${this._handleLogin}>Log In</ing-button>

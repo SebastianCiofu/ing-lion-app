@@ -2,16 +2,18 @@ import { LitElement, html } from 'lit';
 import { userDetailsStyles } from './user-details.style.js';
 
 import '@lion/form/define';
+import '@lion/ui/define/lion-calendar.js';
+import '@lion/ui/define/lion-option.js';
 import '../ing-components/input.js';
 import '../ing-components/button.js';
 import '../ing-components/switch.js';
 import '../ing-components/checkbox-group.js';
+import '../ing-components/checkbox.js';
 import '../ing-components/nav.js';
 import '../ing-components/dialog.js';
 import '../ing-components/input-iban.js';
-import '@lion/ui/define/lion-calendar.js';
-import '@lion/ui/define/lion-option.js';
 import '../ing-components/select.js';
+import '../ing-components/spinner.js';
 import './person-info.js';
 
 class IngUserDetails extends LitElement {
@@ -21,10 +23,12 @@ class IngUserDetails extends LitElement {
 
   static get properties() {
     return {
-      darkMode: { type: Boolean, reflect: true }, // Reflect the property to allow attribute binding
+      darkMode: { type: Boolean },
       notifications: { type: Array },
       response: { type: Array },
       newAssociate: { type: String },
+      selectedBusiness: { type: String },
+      loading: { type: Boolean },
     };
   }
 
@@ -38,6 +42,8 @@ class IngUserDetails extends LitElement {
     ];
     this.response = [];
     this.newAssociate = '';
+    this.selectedBusiness = '';
+    this.loading = false;
   }
 
   firstUpdated() {
@@ -45,6 +51,7 @@ class IngUserDetails extends LitElement {
       .then(r => r.json())
       .then(r => {
         this.response = r.results.slice(0, 5);
+        this.loading = false;
       });
   }
 
@@ -72,6 +79,10 @@ class IngUserDetails extends LitElement {
     this.darkMode = event.target.checked;
   }
 
+  _handleBusinessSelect(event) {
+    this.selectedBusiness = event.target.value;
+  }
+
   render() {
     const { response } = this;
 
@@ -81,22 +92,24 @@ class IngUserDetails extends LitElement {
         <h2>User Profile</h2>
 
         <div class="section">
-        <ing-personal-info></ing-personal-info>
+          <ing-personal-info></ing-personal-info>
         </div>
 
         <div class="section friends-section">
-          <h3>Associates</h3>
+          <h3 class="${this.darkMode ? 'content-dark' : ''}">Associates</h3>
           <ul>
-            ${response.map(
-      item => html` <li>
-                <p>${item.name}</p>
-                <ing-button
-                  @click="${this._handleDelete}"
-                  class="secondary__btn"
-                  >Delete</ing-button
-                >
-              </li>`
-    )}
+            ${this.loading
+        ? html`<ing-spinner></ing-spinner>`
+        : response.map(
+          item => html` <li>
+                    <p>${item.name}</p>
+                    <ing-button
+                      @click="${this._handleDelete}"
+                      class="secondary__btn"
+                      >Delete</ing-button
+                    >
+                  </li>`
+        )}
           </ul>
           <ing-input
             .modelValue=${this.newAssociate}
@@ -113,7 +126,11 @@ class IngUserDetails extends LitElement {
 
         <div class="section">
           <h3>Account Details</h3>
-          <ing-select name="accountType" label="Account Type">
+          <ing-select
+            name="accountType"
+            label="Account Type"
+            @click="${this._handleBusinessSelect}"
+          >
             <lion-option .choiceValue=${'personal'}>Personal</lion-option>
             <lion-option .choiceValue=${'business'}>Business</lion-option>
           </ing-select>
@@ -126,7 +143,7 @@ class IngUserDetails extends LitElement {
         <div class="chart section">
           <div class="chart-title">Balance Overview</div>
           <div
-            class="chart-content ${this.darkMode ? 'chart-content-dark' : ''}"
+            class="chart-content ${this.darkMode ? 'content-dark' : ''}"
           >
             Balance Chart
           </div>
@@ -135,7 +152,7 @@ class IngUserDetails extends LitElement {
         <div class="chart section">
           <div class="chart-title">Spending Analysis</div>
           <div
-            class="chart-content ${this.darkMode ? 'chart-content-dark' : ''}"
+            class="chart-content ${this.darkMode ? 'content-dark' : ''}"
           >
             Spending Chart
           </div>
@@ -149,16 +166,16 @@ class IngUserDetails extends LitElement {
           </div>
           <div class="settings">
             <span class="setting-label">Notifications</span>
-            <ing-checkbox-group name="notifications[]" label="Notifications">
+            <ing-checkbox-group name="notifications[]">
               ${this.notifications.map(
-      notification =>
-        html`
-                    <lion-checkbox
+          notification =>
+            html`
+                    <ing-checkbox
                       label=${notification.title}
                       .choiceValue=${notification.value}
-                    ></lion-checkbox>
+                    ></ing-checkbox>
                   `
-    )}
+        )}
             </ing-checkbox-group>
           </div>
         </div>
