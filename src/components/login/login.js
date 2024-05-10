@@ -88,7 +88,6 @@ class IngLogin extends LitElement {
   render() {
     return html`
       <div class="login-form">
-        <img src="/assets/ing.svg" alt="ING Logo" />
         <h2>${this.header}</h2>
         <lion-form>
           <form @submit=${ev => ev.preventDefault()}>

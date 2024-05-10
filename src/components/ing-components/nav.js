@@ -25,8 +25,8 @@ class IngNav extends LitElement {
         justify-content: space-between;
       }
 
-      img {
-        width: 200px;
+      p{
+        color: #ff6600;
       }
     `;
   }
@@ -43,7 +43,7 @@ class IngNav extends LitElement {
     return html`
       <header>
         <div class="nav__container">
-          <img src="/assets/ing.svg" alt="ING Logo" />
+          <p>Logo</p>
           <ing-button @click=${this._logout}>Logout</ing-button>
         </div>
       </header>
