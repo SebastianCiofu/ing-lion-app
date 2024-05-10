@@ -1,4 +1,4 @@
-# ING Authentication Application
+# Authentication Application
 
 This application is a simple authentication system built with LitElement and Lion Web Components.
 
@@ -18,10 +18,6 @@ Users are able to:
 - Dark mode
 - View calendar
 - Log out of the application
-
-<img src="./assets/app.gif" alt="Demo example"/>
-    <br>
-    <br>
 
 ### Built with
 
